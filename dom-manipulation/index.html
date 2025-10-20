@@ -15,21 +15,25 @@
     <option value="all">All Categories</option>
   </select>
 
-  <!-- Quote Display Area -->
+  <!-- Quote Display -->
   <div id="quoteDisplay"></div>
 
   <!-- Buttons -->
   <button id="newQuote">Show New Quote</button>
   <button id="exportQuotesBtn">Export Quotes</button>
+  <button id="syncBtn">Sync with Server</button>
 
-  <!-- Add Quote Form -->
-  <div id="addQuoteFormContainer">
-    <input type="text" id="newQuoteText" placeholder="Enter a new quote" />
+  <!-- Sync Status -->
+  <p id="syncStatus"></p>
+
+  <!-- Add Quote -->
+  <div>
+    <input type="text" id="newQuoteText" placeholder="Enter new quote" />
     <input type="text" id="newQuoteCategory" placeholder="Enter category" />
     <button id="addQuoteBtn">Add Quote</button>
   </div>
 
-  <!-- Import JSON Input -->
+  <!-- Import JSON -->
   <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
 
   <script src="script.js"></script>
