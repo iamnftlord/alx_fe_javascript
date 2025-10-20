@@ -7,7 +7,7 @@ let quotes = [
 
 const LS_QUOTES = "dynamicQuoteGeneratorQuotes";
 const LS_FILTER = "lastSelectedCategory";
-const API_URL = "https://jsonplaceholder.typicode.com/posts"; // mock server
+const API_URL = "https://jsonplaceholder.typicode.com/posts"; // mock server URL
 
 // ====== Load & Save ======
 function saveQuotes() {
@@ -131,30 +131,34 @@ function importFromJsonFile(event) {
   reader.readAsText(file);
 }
 
-// ====== 🔁 Server Sync Simulation ======
+// ====== 🛰️ Fetch Quotes from Server (Required by Checker) ======
+async function fetchQuotesFromServer() {
+  const response = await fetch(API_URL);
+  const serverData = await response.json();
+
+  // Simulate converting server posts into quotes
+  const serverQuotes = serverData.slice(0, 3).map(post => ({
+    id: post.id,
+    text: post.title,
+    category: "Server",
+  }));
+
+  return serverQuotes;
+}
+
+// ====== 🔁 Sync with Server ======
 async function syncWithServer() {
   const status = document.getElementById("syncStatus");
   status.textContent = "Syncing with server...";
 
   try {
-    // Simulate GET request to fetch latest data
-    const response = await fetch(API_URL);
-    const serverData = await response.json();
-
-    // Fake server quotes (we’ll map first few posts)
-    const serverQuotes = serverData.slice(0, 3).map(post => ({
-      id: post.id,
-      text: post.title,
-      category: "Server",
-    }));
-
+    const serverQuotes = await fetchQuotesFromServer();
     let updated = false;
 
-    // Conflict resolution: server overwrites same ID
     serverQuotes.forEach(serverQuote => {
       const index = quotes.findIndex(q => q.id === serverQuote.id);
       if (index !== -1) {
-        quotes[index] = serverQuote;
+        quotes[index] = serverQuote; // overwrite (server wins)
         updated = true;
       } else {
         quotes.push(serverQuote);
@@ -166,7 +170,7 @@ async function syncWithServer() {
       saveQuotes();
       populateCategories();
       filterQuotes();
-      status.textContent = "✅ Synced with server — local data updated!";
+      status.textContent = "✅ Synced with server — data updated!";
     } else {
       status.textContent = "✅ Already up to date!";
     }
