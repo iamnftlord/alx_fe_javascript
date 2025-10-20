@@ -6,38 +6,61 @@ let quotes = [
   { text: "The secret of getting ahead is getting started.", category: "Motivation" },
 ];
 
-// ====== Function to Create Add Quote Form (for Checker) ======
+// ====== Function to Create Add Quote Form ======
 function createAddQuoteForm() {
   const formContainer = document.getElementById("addQuoteFormContainer");
 
-  if (!formContainer) return;
+  // Create input for quote text
+  const quoteInput = document.createElement("input");
+  quoteInput.type = "text";
+  quoteInput.id = "newQuoteText";
+  quoteInput.placeholder = "Enter a new quote";
 
-  formContainer.innerHTML = `
-    <input type="text" id="newQuoteText" placeholder="Enter a new quote" />
-    <input type="text" id="newQuoteCategory" placeholder="Enter category" />
-    <button id="addQuoteBtn">Add Quote</button>
-  `;
+  // Create input for category
+  const categoryInput = document.createElement("input");
+  categoryInput.type = "text";
+  categoryInput.id = "newQuoteCategory";
+  categoryInput.placeholder = "Enter category";
 
-  // Event listener for Add Quote button
-  document.getElementById("addQuoteBtn").addEventListener("click", addQuote);
+  // Create button to add quote
+  const addButton = document.createElement("button");
+  addButton.id = "addQuoteBtn";
+  addButton.textContent = "Add Quote";
+
+  // Append elements to the form container
+  formContainer.appendChild(quoteInput);
+  formContainer.appendChild(categoryInput);
+  formContainer.appendChild(addButton);
+
+  // Add event listener to the button
+  addButton.addEventListener("click", addQuote);
 }
 
 // ====== Function to Show a Random Quote ======
 function showRandomQuote() {
   const quoteDisplay = document.getElementById("quoteDisplay");
 
+  // Clear existing content
+  quoteDisplay.innerHTML = "";
+
   if (quotes.length === 0) {
-    quoteDisplay.innerHTML = "No quotes available. Please add one!";
+    quoteDisplay.textContent = "No quotes available. Please add one!";
     return;
   }
 
   const randomIndex = Math.floor(Math.random() * quotes.length);
   const randomQuote = quotes[randomIndex];
 
-  quoteDisplay.innerHTML = `
-    <p>"${randomQuote.text}"</p>
-    <small>Category: <strong>${randomQuote.category}</strong></small>
-  `;
+  // Create new DOM elements using createElement
+  const quoteText = document.createElement("p");
+  quoteText.textContent = `"${randomQuote.text}"`;
+
+  const quoteCategory = document.createElement("small");
+  quoteCategory.textContent = `Category: ${randomQuote.category}`;
+
+  // Append elements to display area
+  quoteDisplay.appendChild(quoteText);
+  quoteDisplay.appendChild(quoteCategory);
 }
 
 // ====== Function to Add a New Quote ======
@@ -53,10 +76,11 @@ function addQuote() {
     return;
   }
 
+  // Add new quote to array
   const newQuote = { text: newQuoteText, category: newQuoteCategory };
   quotes.push(newQuote);
 
-  // Update DOM after adding
+  // Update the DOM (show latest quote)
   showRandomQuote();
 
   // Clear inputs
