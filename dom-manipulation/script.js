@@ -6,6 +6,22 @@ let quotes = [
   { text: "The secret of getting ahead is getting started.", category: "Motivation" },
 ];
 
+// ====== Function to Create Add Quote Form (for Checker) ======
+function createAddQuoteForm() {
+  const formContainer = document.getElementById("addQuoteFormContainer");
+
+  if (!formContainer) return;
+
+  formContainer.innerHTML = `
+    <input type="text" id="newQuoteText" placeholder="Enter a new quote" />
+    <input type="text" id="newQuoteCategory" placeholder="Enter category" />
+    <button id="addQuoteBtn">Add Quote</button>
+  `;
+
+  // Event listener for Add Quote button
+  document.getElementById("addQuoteBtn").addEventListener("click", addQuote);
+}
+
 // ====== Function to Show a Random Quote ======
 function showRandomQuote() {
   const quoteDisplay = document.getElementById("quoteDisplay");
@@ -40,13 +56,18 @@ function addQuote() {
   const newQuote = { text: newQuoteText, category: newQuoteCategory };
   quotes.push(newQuote);
 
-  // Clear input fields
+  // Update DOM after adding
+  showRandomQuote();
+
+  // Clear inputs
   quoteTextInput.value = "";
   quoteCategoryInput.value = "";
 
   alert("New quote added successfully!");
-  showRandomQuote(); // Optional: display the newly added quote
 }
 
 // ====== Event Listener for 'Show New Quote' Button ======
 document.getElementById("newQuote").addEventListener("click", showRandomQuote);
+
+// ====== Initialize Form on Page Load ======
+window.addEventListener("DOMContentLoaded", createAddQuoteForm);
